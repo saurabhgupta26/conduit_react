@@ -86,6 +86,10 @@ a {
 .flex1 {
     justify-content: flex-start;
 }
+.flex2 {
+    flex-direction:column;
+    align-items: center;
+}
 body {
     font-family: titillium web,sans-serif;
 }
@@ -95,9 +99,9 @@ body {
     /* padding: 20px 10px; */
     color: #a9b4bd;
 }
-.nav_bar li {
-    padding: 20px 10px;
-}
+/* .nav_bar li {
+    margin: 20px 10px;
+} */
 .logo h3 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -210,4 +214,39 @@ body {
 }
 .padding {
     margin-bottom: 20px 0;
+}
+
+.primary {
+    padding: 10px 5px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    border: none;
+    margin: 4px;
+    border: 2px solid #65686b;
+}
+.primary_color {
+    color: #5CB85C;
+    margin: 10px;
+}
+.primary_btn {
+    background: #5CB85C;
+    color: #fff;
+}
+.right_align {
+    text-align: right;
+}
+.form_field {
+    width: 500px;
+    font-size: 1.5rem;
+    padding: .75rem;
+    margin: 10px;
+    border-radius: 5px;
+    background: rgb(255, 255, 168);
+}
+.signup_card {
+    text-align: center;
+}
+.signup_card h1 {
+    font-size: 2.5rem;
+    margin: 10px;
 }
