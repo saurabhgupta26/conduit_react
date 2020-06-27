@@ -4,7 +4,7 @@ import Wholepage from "./components/Wholepage.jsx";
 import Header from "./components/Header.jsx";
 import Login from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
-import Error from './components/Error.jsx';
+import Error from "./components/Error.jsx";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -12,6 +12,7 @@ export default class App extends React.Component {
     this.state = {
       articles: null,
       tags: null,
+      isLoggedIn: false,
     };
   }
 
@@ -41,10 +42,15 @@ export default class App extends React.Component {
       .then((data) => this.setState({ articles: data.articles }));
   };
 
+  updateLoggedIn = (status) => {
+    this.setState({ isLoggedIn: status });
+  };
+
   render() {
+    let { isLoggedIn } = this.state;
     return (
       <BrowserRouter>
-        <Header />
+        <Header isLoggedIn={isLoggedIn} />
         <Switch>
           <Route
             render={() => (
@@ -58,8 +64,17 @@ export default class App extends React.Component {
             path="/"
             exact
           />
-          <Route component={Login} path="/login" exact />
-          <Route component={Signup} path="/signup" exact />
+          <Route
+            render={() =>(
+              <Login updateLoggedIn={this.updateLoggedIn
+              }
+              />
+              )}
+            path="/login"
+            exact
+          />
+          <Route component={Signup}
+          path="/signup" exact />
           <Route component={Error} />
         </Switch>
       </BrowserRouter>

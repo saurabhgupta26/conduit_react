@@ -5,7 +5,7 @@ export default class Signup extends React.Component {
     super(props);
     this.state = {
         username : '',
-        name : '',
+        email : '',
         password: ''
     };
   }
@@ -21,10 +21,15 @@ export default class Signup extends React.Component {
         headers: {
             'Content-Type': 'application/json'},
             body:JSON.stringify({user:this.state}),
+        }).then(res => {
+            if(res.status === 200) {
+              this.props.history.push('/'); 
+            }
         })
   }
 
   render() {
+      let {username, email, password} = this.state;
     return (
       <>
         <div className="signup_card">
@@ -32,13 +37,14 @@ export default class Signup extends React.Component {
           <a className="primary_color" href="/login">
             Have an account?
           </a>
-          <form action="" className="flex flex2">
+          <div className="flex flex2">        
             <input
               className="form_field"
               type="text"
               name="username"
               placeholder="Username"
               onChange={this.handleInput}
+              value={username}
             />
             <input
               className="form_field"
@@ -46,6 +52,8 @@ export default class Signup extends React.Component {
               name="email"
               placeholder="Email"
               onChange={this.handleInput}
+              value={email}
+            
             />
             <input
               className="form_field"
@@ -53,6 +61,8 @@ export default class Signup extends React.Component {
               name="password"
               placeholder="*****"
               onChange={this.handleInput}
+              value={password}
+            
             />
             <input
               type="submit"
@@ -60,7 +70,7 @@ export default class Signup extends React.Component {
               className="primary primary_btn"
               onClick={this.handleSubmit}
             />
-          </form>
+          </div>
         </div>
       </>
     );
