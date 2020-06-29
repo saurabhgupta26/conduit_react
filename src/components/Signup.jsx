@@ -23,7 +23,7 @@ export default class Signup extends React.Component {
             body:JSON.stringify({user:this.state}),
         }).then(res => {
             if(res.status === 200) {
-              this.props.history.push('/'); 
+              this.props.history.push('/login'); 
             }
         })
   }

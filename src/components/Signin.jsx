@@ -35,9 +35,8 @@ class Signin extends React.Component {
       return res.json();
     })
     .then(({user}) => {
-      localStorage.setItem(
-        'authToken',
-        user.token
+      user && localStorage.setItem(
+        'authToken', user.token
         );
     });
   };
@@ -71,7 +70,7 @@ class Signin extends React.Component {
             <p>{error && error}</p>
             <button
               className="primary primary_btn"
-              onChange={this.handleSubmit}
+              onClick={this.handleSubmit}
             >
               Log In
             </button>

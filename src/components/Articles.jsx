@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from 'react-router-dom';
 
 function Articles(props) {
   console.log("in everything");
@@ -24,7 +25,7 @@ function Articles(props) {
             </div>
             <h4 className="article_title"> {elem.title} </h4>
             <h5 className="article_description padding">{elem.description}</h5>
-            <a href='https://conduit.productionready.io/api/articles'>Read more...</a>
+            <Link to={`articles/${elem.slug}`}>Read more...</Link>
           </section>
         );
       })}
