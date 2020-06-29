@@ -11,12 +11,12 @@ function Articles(props) {
             <div className="flex">
               <div className="flex">
                 <img src={elem.author.image} className="author_img" alt="img" />
-                <div className="article_author">
+                <Link className="article_author" to={`profile/${elem.author.username}`}>
                   <span className="author">{elem.author.username}</span>
                   <span className="article_date">
                     {elem.createdAt.split("T")[0]}
                   </span>
-                </div>
+                </Link>
               </div>
               <button className="favorite_count" key={i}>
                 <i class="fas fa-heart"></i>

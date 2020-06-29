@@ -5,8 +5,10 @@ import Header from "./components/Header.jsx";
 import Signin from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
 import Error from "./components/Error.jsx";
-import Loading from './components/Loading.jsx';
-import Article from './components/Article.jsx';
+import Loading from "./components/Loading.jsx";
+import Article from "./components/Article.jsx";
+import CreateArticle from "./components/CreateArticle.jsx";
+import User from './components/User.jsx';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -14,9 +16,8 @@ export default class App extends React.Component {
     this.state = {
       articles: null,
       tags: null,
-      isLoggedIn: localStorage.getItem('authToken')?true:false,
+      isLoggedIn: localStorage.getItem("authToken") ? true : false,
       userInfo: null,
-
     };
   }
 
@@ -32,9 +33,9 @@ export default class App extends React.Component {
       })
         .then((res) => res.json())
         .then(({ user }) => {
-          this.setState({ isLoggedIn: true,
-            userInfo: user });
-        }).catch((err) => this.setState({ isLoggedIn: false }));
+          this.setState({ isLoggedIn: true, userInfo: user });
+        })
+        .catch((err) => this.setState({ isLoggedIn: false }));
     }
 
     fetch(`https://conduit.productionready.io/api/articles?limit=10&offset=0`)
@@ -45,7 +46,6 @@ export default class App extends React.Component {
       .then((response) => response.json())
       .then((data) => this.setState({ tags: data.tags }));
   }
-
 
   handleClick = (tag) => {
     fetch(
@@ -67,10 +67,10 @@ export default class App extends React.Component {
 
   render() {
     let { isLoggedIn } = this.state;
-    if(!isLoggedIn) {
-      return <Loading />
+    if (!isLoggedIn) {
+      return <Loading />;
     }
-    
+
     return (
       <BrowserRouter>
         <Header isLoggedIn={isLoggedIn} />
@@ -92,8 +92,10 @@ export default class App extends React.Component {
             path="/login"
             exact
           />
+          <Route component={User} path='/profile/:profileSlug' />
+          <Route component={Article} path="/articles/:slug" exact />
           <Route component={Signup} path="/signup" exact />
-          <Route component={Article} path='/articles/:slug' exact />
+          <Route component={CreateArticle} path="/create" exact />
           <Route component={Error} />
         </Switch>
       </BrowserRouter>

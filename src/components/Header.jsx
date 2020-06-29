@@ -32,7 +32,7 @@ const AuthHeader = () => (
     <NavLink activeClassName="primary_btn" className="primary" to="/">
       <li>Home</li>
     </NavLink>
-    <NavLink activeClassName="primary_btn" className="primary" to="/new">
+    <NavLink activeClassName="primary_btn" className="primary" to="/create">
       <li>New Post</li>
     </NavLink>
     <NavLink activeClassName="primary_btn" className="primary" to="/settings">

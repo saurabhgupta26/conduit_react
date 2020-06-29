@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import Loading from "./Loading.jsx";
 
 export default class Article extends React.Component {
