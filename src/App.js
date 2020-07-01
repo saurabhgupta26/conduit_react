@@ -9,6 +9,7 @@ import Loading from "./components/Loading.jsx";
 import Article from "./components/Article.jsx";
 import CreateArticle from "./components/CreateArticle.jsx";
 import User from './components/User.jsx';
+import EditArticle from "./components/EditArticle.jsx";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -67,9 +68,10 @@ export default class App extends React.Component {
 
   render() {
     let { isLoggedIn } = this.state;
-    if (!isLoggedIn) {
-      return <Loading />;
-    }
+    console.log(this.state.articles);
+    // if (!isLoggedIn) {
+    //   return <Loading />;
+    // }
 
     return (
       <BrowserRouter>
@@ -92,10 +94,14 @@ export default class App extends React.Component {
             path="/login"
             exact
           />
+          <Route component={EditArticle} path='/articles/:slug/edit' />
           <Route component={User} path='/profile/:profileSlug' />
-          <Route component={Article} path="/articles/:slug" exact />
-          <Route component={Signup} path="/signup" exact />
-          <Route component={CreateArticle} path="/create" exact />
+          <Route component={Article} path="/articles/:slug" />
+
+          {/* <Route component={EditUser} path='/editUser/' /> */} 
+          
+          <Route component={Signup} path="/signup" />
+          <Route component={CreateArticle} path="/create" />
           <Route component={Error} />
         </Switch>
       </BrowserRouter>

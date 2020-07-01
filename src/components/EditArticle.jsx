@@ -1,34 +1,63 @@
 import React from "react";
+import Loading from './Loading.jsx';
 
-export default class CreateArticle extends React.Component {
-  constructor(props) {
+export default class EditArticle extends React.Component {
+  constructor(props, context) {
     super(props);
     this.state = {
-      title: "",
-      description: "",
-      body: "",
-      tagsList: '',
+      article: null,
+      slug: props.match.params.slug
     };
   }
+
+  componentDidMount() {
+      let {slug} = this.state;
+      let url = `https://conduit.productionready.io/api/articles/${slug}`;
+      fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        authorization: `Token ${localStorage.authToken}`,
+      })
+        .then((res) => res.json())
+        .then((data) => this.setState({ article : data.article }));
+        
+        console.log(this.state.article, "EDIT");
+    }
+
   handleInput = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
+      if(this.state.article) {
+          let article = this.state.article;
+          if(name !== 'tagList') {
+              article[name] = value;
+              this.setState({article});
+          } else {
+              value = value.split(",").map((tag) => tag.trim());
+              article[name] = value;
+              this.setState({article});
+          }
+      }
   };
+
+
   handleSubmit = () => {
-    let url = "https://conduit.productionready.io/api/articles";
+    let url = `https://conduit.productionready.io/api/articles/${this.state.slug}`;
     fetch(url, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         authorization: `Token ${localStorage.authToken}`,
       },
-      body: JSON.stringify({ article : this.state }),
+      body: JSON.stringify({ article : this.state.article }),
     }).then((res) => {
       if (res.status === 200) {
-        this.props.history.push("/");
+        this.props.history.push(`/articles/${this.state.slug}`);
       }
     });
   };
   render() {
+      if(!this.state.article) {
+          return <Loading />
+      }
     let { title, description, body, tagsList } = this.state;
     return (
       <>
