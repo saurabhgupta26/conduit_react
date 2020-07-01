@@ -80,15 +80,15 @@ export default class User extends React.Component {
             <h2>{userInfo.bio}</h2>
             <img className='user_image' src={userInfo.image} alt="img" />
 
-            {/* {this.state.userInfo.following ? ( */}
+            {this.state.userInfo.following ? (
             <button onClick={() => this.handleUnfollow(false)}>
               Unfollow {userId}
             </button>
-             {/* ) : ( */}
+             ) : (
             <button onClick={() => this.handleFollow(true)}>
               Follow {userId}
             </button>
-             {/* )} */}
+             )}
           </section>
         ) : (
           <Loading />

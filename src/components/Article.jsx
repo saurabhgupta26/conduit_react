@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Loading from "./Loading.jsx";
+import { withRouter } from 'react-router-dom';
 
-export default class Article extends React.Component {
+class Article extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,21 +41,52 @@ export default class Article extends React.Component {
       });
   }
 
+  handleDelete = () => {
+    let articleId = this.props.match.params.slug;
+    let url = `https://conduit.productionready.io/api/articles/${articleId}`;
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Token ${localStorage.authToken}`,
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        this.props.history.push("/");
+      }
+    });
+  };
+
   render() {
     return (
       <>
         {this.state.articleData ? (
           <section>
             <h2>{this.state.articleData.title}</h2>
-
-            <Link className="article_author" to={`/profile/${this.state.articleData.author.username}`}>
-            <img className='user_image' src={this.state.articleData.author.image} alt="img" />
-            <h2>{this.state.articleData.author.username}</h2>
-            <p>{this.state.articleData.createdAt}</p>
+            <Link
+              className="article_author"
+              to={`/profile/${this.state.articleData.author.username}`}
+            >
+              <img
+                className="user_image"
+                src={this.state.articleData.author.image}
+                alt="img"
+              />
+              <h2>{this.state.articleData.author.username}</h2>
+              <p>{this.state.articleData.createdAt}</p>
             </Link>
-
-            <Link to={`/articles/${this.props.match.params.slug}/edit`}>Edit Article</Link>
-
+            {this.state.articleData.author.username ===
+            this.props.userInfo.username ?
+            <>
+            <Link to={`/articles/${this.props.match.params.slug}/edit`}>
+              Edit Article
+            </Link>
+            <Link onClick={this.handleDelete}>Delete Article</Link>
+            </>
+            :
+            <div> 
+            </div>
+            }
             <p>{this.state.articleData.body}</p>
             <h1>{this.state.articleData.tagList}</h1>
           </section>
@@ -66,7 +98,7 @@ export default class Article extends React.Component {
             return (
               <>
                 <h2> {elem.body} </h2>
-                <p>{elem.createdAt.split('T', [1])}</p>
+                <p>{elem.createdAt.split("T", [1])}</p>
               </>
             );
           })
@@ -77,3 +109,6 @@ export default class Article extends React.Component {
     );
   }
 }
+
+
+export default withRouter(Article);

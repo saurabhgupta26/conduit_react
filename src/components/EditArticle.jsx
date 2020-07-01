@@ -20,7 +20,6 @@ export default class EditArticle extends React.Component {
       })
         .then((res) => res.json())
         .then((data) => this.setState({ article : data.article }));
-        
         console.log(this.state.article, "EDIT");
     }
 
@@ -58,7 +57,7 @@ export default class EditArticle extends React.Component {
       if(!this.state.article) {
           return <Loading />
       }
-    let { title, description, body, tagsList } = this.state;
+    let { title, description, body, tagsList } = this.state.article;
     return (
       <>
         <div className="create_card">

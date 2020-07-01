@@ -8,8 +8,9 @@ import Error from "./components/Error.jsx";
 import Loading from "./components/Loading.jsx";
 import Article from "./components/Article.jsx";
 import CreateArticle from "./components/CreateArticle.jsx";
-import User from './components/User.jsx';
+import User from "./components/User.jsx";
 import EditArticle from "./components/EditArticle.jsx";
+import Setting from "./components/Setting.jsx";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -67,7 +68,7 @@ export default class App extends React.Component {
   };
 
   render() {
-    let { isLoggedIn } = this.state;
+    let { isLoggedIn, userInfo } = this.state;
     console.log(this.state.articles);
     // if (!isLoggedIn) {
     //   return <Loading />;
@@ -75,7 +76,7 @@ export default class App extends React.Component {
 
     return (
       <BrowserRouter>
-        <Header isLoggedIn={isLoggedIn} />
+        <Header isLoggedIn={isLoggedIn} userInfo={userInfo} />
         <Switch>
           <Route
             render={() => (
@@ -84,6 +85,7 @@ export default class App extends React.Component {
                 tags={this.state.tags}
                 handleClick={this.handleClick}
                 handleGlobal={this.handleGlobal}
+                userInfo={this.state.userInfo}
               />
             )}
             path="/"
@@ -94,12 +96,15 @@ export default class App extends React.Component {
             path="/login"
             exact
           />
-          <Route component={EditArticle} path='/articles/:slug/edit' />
-          <Route component={User} path='/profile/:profileSlug' />
-          <Route component={Article} path="/articles/:slug" />
-
-          {/* <Route component={EditUser} path='/editUser/' /> */} 
-          
+          <Route component={EditArticle} path="/articles/:slug/edit" />
+          <Route component={User} path="/profile/:profileSlug" />
+          <Route
+            render={() => (
+              <Article userInfo = {this.state.userInfo} />
+            )}
+            path="/articles/:slug"
+          />
+          <Route component={Setting} path="/setting" />
           <Route component={Signup} path="/signup" />
           <Route component={CreateArticle} path="/create" />
           <Route component={Error} />

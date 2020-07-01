@@ -3,7 +3,7 @@ import Articles from "./Articles";
 import Tags from "./Tags.jsx";
 import Feed from "./Feed.jsx";
 import Loading from "./Loading.jsx";
-// import Header from './Header.jsx';
+import { withRouter } from 'react-router-dom';
 
 function Wholepage(props) {
   return (
@@ -39,4 +39,4 @@ function Wholepage(props) {
     </>
   );
 }
-export default Wholepage;
+export default withRouter(Wholepage);
