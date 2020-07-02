@@ -24,9 +24,11 @@ export default class App extends React.Component {
   }
 
   handleFavourite = (slug, e) => {
+    console.log(slug, "SLUG")
+    alert("POST");
     let articleId = slug;
     e.target.classList.add("unfavorite");
-    console.log(articleId, "POOl");
+    // console.log(articleId, "POOl");
     let url = `https://conduit.productionready.io/api/articles/${articleId}/favorite`
     fetch(url, {
       method:'POST',
@@ -34,16 +36,18 @@ export default class App extends React.Component {
         'Content-Type': 'application/json',
         authorization:`Token ${localStorage.authToken}`
       }
-    }).then((res) => {
-      if(res.status=== 200) {
-        let articles = {...this.state.articles};
-        articles.favorited = true;
+    }).then((res) => res.json()).then(({article}) => {
+        let index = this.state.articles.findIndex(elem => elem.slug===slug);
+        let articles = this.state.articles.slice();
+        articles[index].favorited = article.favorited;
+        articles[index].favoritesCount = article.favoritesCount;
+        // console.log(article, "ARTICLES_______")
         this.setState({articles});
-      }
     });
   };
   handleUnfavourite = (slug, e) => {
     let articleId = slug;
+    alert("DELETE");
     if(e.target.classList.contains("unfavorite"))
     e.target.classList.remove("unfavorite");
     let url = `https://conduit.productionready.io/api/articles/${articleId}/favorite`
@@ -53,17 +57,15 @@ export default class App extends React.Component {
         'Content-Type': 'application/json',
         authorization:`Token ${localStorage.authToken}`
       }
-    }).then((res) => {
-      if(res.status=== 200) {
-        let articles = {...this.state.articles};
-        articles.favorited = false;
-        this.setState({articles});
-
-      }
-    });
-  }
-
-
+    }).then((res) => res.json()).then(({article}) => {
+      let index = this.state.articles.findIndex(elem => elem.slug===slug);
+      let articles = this.state.articles.slice();
+      articles[index].favorited = article.favorited;
+      articles[index].favoritesCount = article.favoritesCount;
+      // console.log(article, "ARTICLES_______")
+      this.setState({articles});
+  });
+};
 
 
   componentDidMount() {
@@ -85,7 +87,9 @@ export default class App extends React.Component {
 
     fetch(`https://conduit.productionready.io/api/articles?limit=10&offset=0`)
       .then((response) => response.json())
-      .then((data) => this.setState({ articles: data.articles }));
+      .then((data) => {
+        console.log(data, "DATA");
+        return this.setState({ articles: data.articles })})
 
     fetch(`https://conduit.productionready.io/api/tags`)
       .then((response) => response.json())
@@ -142,7 +146,14 @@ export default class App extends React.Component {
             exact
           />
           <Route component={EditArticle} path="/articles/:slug/edit" />
-          <Route component={User} path="/profile/:profileSlug" />
+          <Route 
+          render={() => ( 
+          <User
+          articles = {this.state.articles}
+          handleFavourite = {this.handleFavourite}
+          handleUnfavourite = {this.handleUnfavourite}
+           /> )} 
+          path="/profile/:profileSlug" />
           <Route
             render={() => (
               <Article userInfo = {this.state.userInfo} />
