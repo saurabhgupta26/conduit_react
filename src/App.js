@@ -23,6 +23,49 @@ export default class App extends React.Component {
     };
   }
 
+  handleFavourite = (slug, e) => {
+    let articleId = slug;
+    e.target.classList.add("unfavorite");
+    console.log(articleId, "POOl");
+    let url = `https://conduit.productionready.io/api/articles/${articleId}/favorite`
+    fetch(url, {
+      method:'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization:`Token ${localStorage.authToken}`
+      }
+    }).then((res) => {
+      if(res.status=== 200) {
+        let articles = {...this.state.articles};
+        articles.favorited = true;
+        this.setState({articles});
+      }
+    });
+  };
+  handleUnfavourite = (slug, e) => {
+    let articleId = slug;
+    if(e.target.classList.contains("unfavorite"))
+    e.target.classList.remove("unfavorite");
+    let url = `https://conduit.productionready.io/api/articles/${articleId}/favorite`
+    fetch(url, {
+      method:'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization:`Token ${localStorage.authToken}`
+      }
+    }).then((res) => {
+      if(res.status=== 200) {
+        let articles = {...this.state.articles};
+        articles.favorited = false;
+        this.setState({articles});
+
+      }
+    });
+  }
+
+
+
+
   componentDidMount() {
     if (localStorage.authToken) {
       let url = "https://conduit.productionready.io/api/user";
@@ -86,6 +129,8 @@ export default class App extends React.Component {
                 handleClick={this.handleClick}
                 handleGlobal={this.handleGlobal}
                 userInfo={this.state.userInfo}
+                handleFavourite = {this.handleFavourite}
+                handleUnfavourite = {this.handleUnfavourite}
               />
             )}
             path="/"

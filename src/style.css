@@ -160,6 +160,10 @@ body {
     width: 40px;
     border-radius: 5px;
 }
+.unfavorite {
+    color: #fff;
+    background-color: #5BB75B;
+}
 .tags_flex_card {
     flex-basis: 300px;
     padding: 10px;
@@ -173,6 +177,11 @@ body {
     height: 30px;
     border-radius: 50%;
     border: 1px solid #5BB75B;
+}
+.author_image {
+    width: 25px;
+    height: 25px;
+    align-items: center;
 }
 .article_top {
     padding-top: 35px;

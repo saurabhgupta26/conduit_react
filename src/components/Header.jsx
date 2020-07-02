@@ -3,7 +3,6 @@ import { Link, NavLink } from "react-router-dom";
 import { withRouter } from 'react-router-dom';
 
 function Header(props) {
-  console.log(props.userInfo, "USERINFO", props);
   return props.isLoggedIn ? AuthHeader(props) : NonAuthHeader(props);
 }
 
@@ -29,38 +28,41 @@ function NonAuthHeader(props) {
 
 function AuthHeader(props) {
   return(
-  <div className="flex">
+    <>
+    {props.userInfo && props.userInfo.username ?
+    <div className="flex">
+    {props.userInfo && console.log(props.userInfo.username)}
     <Link className="logo" to="/">
       <h3 to='/'>conduit</h3>
     </Link>
     <ul className="nav_bar">
       <div className="flex">
-        {/* {console.log(this.props.userInfo, "USERINFO")} */}
         <NavLink activeClassName="primary_btn" className="primary" to="/">
           <li>Home</li>
         </NavLink>
         <NavLink activeClassName="primary_btn" className="primary" to="/create">
           <li>New Post</li>
         </NavLink>
+        
         <NavLink
           activeClassName="primary_btn"
           className="primary"
-          // to={`/setting/${props.userInfo.username}`}
-          to={`/setting`}
+          to={`/setting/${props.userInfo.username}`}
         >
           <li>Settings</li>
         </NavLink>
         <NavLink
           activeClassName="primary_btn"
           className="primary"
-          // to={`/profile/${props.userInfo.username}`}
-          to={`/profile/`}
+          to={`/profile/${props.userInfo.username}`}
         >
-          <li>User</li>
+          <li className='flex'><img src={props.userInfo.image} alt="image" className='author_img author_image'/>{props.userInfo.username}</li>
         </NavLink>
       </div>
     </ul>
   </div>
+:<> </> }
+  </>
   )
 };
 

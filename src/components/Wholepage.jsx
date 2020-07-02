@@ -21,7 +21,9 @@ function Wholepage(props) {
               <Feed />
             {props.articles ? (
               <div>
-                <Articles articles={props.articles} />
+                <Articles articles={props.articles}
+                 handleFavourite = {props.handleFavourite}
+                 handleUnfavourite = {props.handleUnfavourite} />
               </div>
             ) : (
               <Loading />
