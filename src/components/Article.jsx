@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Loading from "./Loading.jsx";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 
 class Article extends React.Component {
   constructor(props) {
@@ -9,6 +9,7 @@ class Article extends React.Component {
     this.state = {
       articleData: null,
       commentData: null,
+      body: "",
     };
   }
 
@@ -19,7 +20,6 @@ class Article extends React.Component {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Token ${localStorage.authToken}`,
       },
     })
       .then((res) => res.json())
@@ -57,7 +57,29 @@ class Article extends React.Component {
     });
   };
 
+  handleInput = ({ target: { name, value } }) => {
+    this.setState({ [name]: value });
+  };
+
+  handleSubmit = () => {
+    let articleId = this.props.match.params.slug;
+    let url = `https://conduit.productionready.io/api/articles/${articleId}/comments`;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Token ${localStorage.authToken}`,
+      },
+      body: JSON.stringify({ body: this.state.body }),
+    }).then((res) => {
+      if (res.status === 200) {
+        this.props.history.push(`/articles/${articleId}`);
+      }
+    });
+  };
+
   render() {
+    let { body } = this.state;
     return (
       <>
         {this.state.articleData ? (
@@ -75,18 +97,20 @@ class Article extends React.Component {
               <h2>{this.state.articleData.author.username}</h2>
               <p>{this.state.articleData.createdAt}</p>
             </Link>
-            {this.state.articleData.author.username ===
-            this.props.userInfo.username ?
-            <>
-            <Link to={`/articles/${this.props.match.params.slug}/edit`}>
-              Edit Article
-            </Link>
-            <Link onClick={this.handleDelete}>Delete Article</Link>
-            </>
-            :
-            <div> 
-            </div>
-            }
+
+            {this.props.userInfo &&
+            this.state.articleData.author.username ===
+              this.props.userInfo.username ? (
+              <>
+                <Link to={`/articles/${this.props.match.params.slug}/edit`}>
+                  Edit Article
+                </Link>
+                <Link onClick={this.handleDelete}>Delete Article</Link>
+              </>
+            ) : (
+              <> </>
+            )}
+
             <p>{this.state.articleData.body}</p>
             <h1>{this.state.articleData.tagList}</h1>
           </section>
@@ -105,10 +129,44 @@ class Article extends React.Component {
         ) : (
           <Loading />
         )}
+
+        {this.props.userInfo ? (
+          <div className="comment_card">
+            <input
+              type="text"
+              name="body"
+              onChange={this.handleInput}
+              placeholder="Write a comment..."
+              value={body}
+              className="comment_field"
+            />
+            <input
+              type="submit"
+              value="Post Comment"
+              className="primary primary_btn"
+              onClick={this.handleSubmit}
+            />
+          </div>
+        ) : (
+          <> </>
+        )}
+
+        {!this.props.userInfo ? (
+          <h4>
+            <a href="/login" className="primary_color">
+              Sign in
+            </a>
+            or
+            <a href="/signup" className="primary_color">
+              sign up
+            </a>
+            to add comments on this article.
+          </h4>
+        ) : (
+          <></>
+        )}
       </>
     );
   }
 }
-
-
 export default withRouter(Article);

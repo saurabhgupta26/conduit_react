@@ -15,8 +15,9 @@ export default class EditArticle extends React.Component {
       let url = `https://conduit.productionready.io/api/articles/${slug}`;
       fetch(url, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" ,
         authorization: `Token ${localStorage.authToken}`,
+      },
       })
         .then((res) => res.json())
         .then((data) => this.setState({ article : data.article }));

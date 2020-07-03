@@ -1,29 +1,40 @@
 import React from "react";
+import Loading from "./Loading.jsx";
+import { withRouter } from 'react-router-dom';
 
-export default class Setting extends React.Component {
+class Setting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userInfo:null
+      userInfo: null,
     };
   }
 
   componentDidMount() {
-    let profileSlug = this.props.match.params.profileSlug;
-      let url = `https://conduit.productionready.io/api/articles/${profileSlug}`;
+    if (localStorage.authToken) {
+      // let profileSlug = this.props.match.params.profileSlug;
+      let url = "https://conduit.productionready.io/api/user";
       fetch(url, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
-        authorization: `Token ${localStorage.authToken}`,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Token ${localStorage.authToken}`,
+        },
       })
         .then((res) => res.json())
-        .then((data) => this.setState({ article : data.article }));
-        console.log(this.state.article, "EDIT");
+        .then((user) => this.setState({ userInfo: user.user }))
+        .catch((err) => this.setState({ userInfo: null }));
+
+      console.log(this.state.userInfo, "EDIT");
     }
-  
+  }
 
   handleInput = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
+    if (this.state.userInfo) {
+      let userInfo = this.state.userInfo;
+      userInfo[name] = value;
+      this.setState({ userInfo });
+    }
   };
 
   handleSubmit = () => {
@@ -32,7 +43,7 @@ export default class Setting extends React.Component {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        authorization:`Token ${localStorage.authToken}`
+        authorization: `Token ${localStorage.authToken}`,
       },
       body: JSON.stringify({ user: this.state.userInfo }),
     }).then((res) => {
@@ -43,13 +54,16 @@ export default class Setting extends React.Component {
   };
 
   render() {
+    if (!this.state.userInfo) {
+      return <Loading />;
+    }
     let { image, username, bio, email, password } = this.state.userInfo;
     return (
       <>
         <div className="signup_card">
           <h1>Your Settings</h1>
           <div className="flex flex2">
-          <input
+            <input
               className="form_field"
               type="text"
               name="image"
@@ -91,13 +105,17 @@ export default class Setting extends React.Component {
             />
             <input
               type="submit"
-              value="Sign Up"
+              value="Update Settings"
               className="primary primary_btn"
               onClick={this.handleSubmit}
             />
           </div>
+        <hr/>
+        <button onClick={this.props.handleLogout} className='primary logout' >Or click here to logout.</button>
         </div>
       </>
     );
   }
 }
+
+export default withRouter(Setting);

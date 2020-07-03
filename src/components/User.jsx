@@ -147,8 +147,6 @@ class User extends React.Component {
 
         {userArticles && userArticles ? (
           <>
-            {/* <NavLink to={() => this.myArticles} activeClassName='active_feed' className='feed_btn' >My Articles</NavLink>
-          <NavLink to={() => this.favArticles} activeClassName='active_feed' className='feed_btn'>Favorited Articles</NavLink> */}
             <div className="all_articles">
               {this.state.userArticles.map((elem, i) => {
                 return (
@@ -162,7 +160,7 @@ class User extends React.Component {
                         />
                         <Link
                           className="article_author"
-                          to={`profile/${elem.author.username}`}
+                          to={`/profile/${elem.author.username}`}
                         >
                           <span className="author">{elem.author.username}</span>
                           <span className="article_date">
@@ -199,7 +197,7 @@ class User extends React.Component {
                     <h5 className="article_description padding">
                       {elem.description}
                     </h5>
-                    <Link to={`articles/${elem.slug}`}>Read more...</Link>
+                    <Link to={`/articles/${elem.slug}`}>Read more...</Link>
                   </section>
                 );
               })}

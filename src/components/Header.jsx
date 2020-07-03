@@ -56,7 +56,7 @@ function AuthHeader(props) {
           className="primary"
           to={`/profile/${props.userInfo.username}`}
         >
-          <li className='flex'><img src={props.userInfo.image} alt="image" className='author_img author_image'/>{props.userInfo.username}</li>
+          <li className='flex'><img src={props.userInfo.image} alt="prof" className='author_img author_image'/>{props.userInfo.username}</li>
         </NavLink>
       </div>
     </ul>
