@@ -197,9 +197,17 @@ body {
     padding: 10px 15px;
     font-weight: 400;
     font-size: 1.25rem;
+    border: none;
+    background: transparent;
+    color: #424547;
+    border: 2px solid #5BB75B;
+    border-radius: 5px;
+
 }
 .active_feed {
     border-bottom: 2px solid #5BB75B;
+    background: #5BB75B;
+    color: #F3F3F3;
 }
 
 .article_title {

@@ -1,7 +1,7 @@
 import React from "react";
 import Loading from "./Loading.jsx";
 import { withRouter } from "react-router-dom";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class User extends React.Component {
   constructor(props) {
@@ -28,17 +28,16 @@ class User extends React.Component {
       .then(({ profile }) => {
         this.setState({ userInfo: profile });
       });
-    // fetch(myArticleUrl, {
-    //   method: "GET",
-    //   headers: { "Content-Type": "application/json" },
-    //   authorization: `Token ${localStorage.authToken}`,
-    // })
-    //   .then((res) => res.json())
-    //   .then(({ articles }) => {
-    //     this.setState({ userArticles: articles });
-    //   });
+    fetch(myArticleUrl, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      authorization: `Token ${localStorage.authToken}`,
+    })
+      .then((res) => res.json())
+      .then(({ articles }) => {
+        this.setState({ userArticles: articles });
+      });
   }
-
 
   myArticles = () => {
     let userId = this.props.match.params.profileSlug;
@@ -52,21 +51,21 @@ class User extends React.Component {
       .then(({ articles }) => {
         this.setState({ userArticles: articles });
       });
-  }
+  };
 
   favArticles = () => {
     let userId = this.props.match.params.profileSlug;
     let url = `https://conduit.productionready.io/api/articles?favorited=${userId}&limit=5&offset=0`;
     fetch(url, {
       method: "GET",
-      headers: {"Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },
       authorization: `Token ${localStorage.authToken}`,
     })
       .then((res) => res.json())
       .then(({ articles }) => {
-        this.setState({ userArticles : articles });
+        this.setState({ userArticles: articles });
       });
-  }
+  };
 
   handleFollow = () => {
     let userId = this.props.match.params.profileSlug;
@@ -127,8 +126,20 @@ class User extends React.Component {
                 Follow {userId}
               </button>
             )}
-            <NavLink to={() => this.myArticles} activeClassName='active_feed' className='feed_btn' >My Articles</NavLink>
-          <NavLink to={() => this.favArticles} activeClassName='active_feed' className='feed_btn'>Favorited Articles</NavLink>
+            <button
+              onClick={this.myArticles}
+              activeClassName="active_feed"
+              className="feed_btn"
+            >
+              My Articles
+            </button>
+            <button
+              onClick={this.favArticles}
+              activeClassName="active_feed"
+              className="feed_btn"
+            >
+              Favorited Articles
+            </button>
           </section>
         ) : (
           <Loading />
@@ -136,64 +147,64 @@ class User extends React.Component {
 
         {userArticles && userArticles ? (
           <>
-          {/* <NavLink to={() => this.myArticles} activeClassName='active_feed' className='feed_btn' >My Articles</NavLink>
+            {/* <NavLink to={() => this.myArticles} activeClassName='active_feed' className='feed_btn' >My Articles</NavLink>
           <NavLink to={() => this.favArticles} activeClassName='active_feed' className='feed_btn'>Favorited Articles</NavLink> */}
-          <div className="all_articles">
-            {this.state.userArticles.map((elem, i) => {
-              return (
-                <section className="article_top" key={i}>
-                  <div className="flex">
+            <div className="all_articles">
+              {this.state.userArticles.map((elem, i) => {
+                return (
+                  <section className="article_top" key={i}>
                     <div className="flex">
-                      <img
-                        src={elem.author.image}
-                        className="author_img"
-                        alt="img"
-                      />
-                      <Link
-                        className="article_author"
-                        to={`profile/${elem.author.username}`}
-                      >
-                        <span className="author">{elem.author.username}</span>
-                        <span className="article_date">
-                          {elem.createdAt.split("T")[0]}
-                        </span>
-                      </Link>
+                      <div className="flex">
+                        <img
+                          src={elem.author.image}
+                          className="author_img"
+                          alt="img"
+                        />
+                        <Link
+                          className="article_author"
+                          to={`profile/${elem.author.username}`}
+                        >
+                          <span className="author">{elem.author.username}</span>
+                          <span className="article_date">
+                            {elem.createdAt.split("T")[0]}
+                          </span>
+                        </Link>
+                      </div>
+                      {console.log(elem.favorited, "HERE is ")}
+                      {!elem.favorited ? (
+                        <button
+                          className="favorite_count"
+                          onClick={(e) =>
+                            this.props.handleFavourite(elem.slug, e)
+                          }
+                          key={i}
+                        >
+                          <i class="fas fa-heart"></i>
+                          {elem.favoritesCount}
+                        </button>
+                      ) : (
+                        <button
+                          className="favorite_count"
+                          onClick={(e) =>
+                            this.props.handleUnfavourite(elem.slug, e)
+                          }
+                          key={i}
+                        >
+                          <i class="fas fa-heart"></i>
+                          {elem.favoritesCount}
+                        </button>
+                      )}
                     </div>
-                    {console.log(elem.favorited, "HERE is ")}
-                    {!elem.favorited ? (
-                      <button
-                        className="favorite_count"
-                        onClick={(e) =>
-                          this.props.handleFavourite(elem.slug, e)
-                        }
-                        key={i}
-                      >
-                        <i class="fas fa-heart"></i>
-                        {elem.favoritesCount}
-                      </button>
-                    ) : (
-                      <button
-                        className="favorite_count"
-                        onClick={(e) =>
-                          this.props.handleUnfavourite(elem.slug, e)
-                        }
-                        key={i}
-                      >
-                        <i class="fas fa-heart"></i>
-                        {elem.favoritesCount}
-                      </button>
-                    )}
-                  </div>
-                  <h4 className="article_title"> {elem.title} </h4>
-                  <h5 className="article_description padding">
-                    {elem.description}
-                  </h5>
-                  <Link to={`articles/${elem.slug}`}>Read more...</Link>
-                </section>
-              );
-            })}
-          </div>
-        </>
+                    <h4 className="article_title"> {elem.title} </h4>
+                    <h5 className="article_description padding">
+                      {elem.description}
+                    </h5>
+                    <Link to={`articles/${elem.slug}`}>Read more...</Link>
+                  </section>
+                );
+              })}
+            </div>
+          </>
         ) : (
           <Loading />
         )}
